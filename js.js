@@ -23,11 +23,7 @@ for(let i = ww*0.1+30; i <= 630+ww*0.1; i+= 30){
     ctx.moveTo(i, wh*0.1-30);
     ctx.lineTo(i, 300+wh*0.1);
 }
-for(let i = wh*0.1; i <= 300+wh*0.1; i+= 30){
-    clog(i)
-    if (i == 96.60000000000001 || i == 396.6) {
-        continue;
-    }
+for(let i = wh*0.1+30; i <= 270+wh*0.1; i+= 30){
     ctx.moveTo(ww*0.1-30, i);
     ctx.lineTo(660+ww*0.1, i);
 }
@@ -80,12 +76,20 @@ let arrayShips = [4,3,3,2,2,2,1,1,1,1];
 // ctx.strokeRect(ww*0.1, wh*0.1+665, 30, 30);
 
 canvas.addEventListener('click', (e) => {
-    ctx.beginPath();
-    ctx.strokeStyle = '#888';
-    ctx.lineWidth = 2;
-    ctx.moveTo(474.8, 98.6);
-    ctx.lineTo(504.8, 126);
-    ctx.moveTo(504.8, 98.6);
-    ctx.lineTo(474.8, 126.6);
-    ctx.stroke();
+    let x = Math.floor((e.x-ww*0.1)/30);
+    let y = Math.floor((e.y-wh*0.1)/30);
+    clog(`${x}\t${y}`);
+    let xB = ww*0.1+(x*30);
+    let yB = wh*0.1+(y*30);
+    if(x >= 12 && x <= 21 && y >= 0 && y <= 9) {
+        ctx.beginPath();
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 2;
+        ctx.moveTo(xB, yB);
+        ctx.lineTo(xB+30, yB+30);
+        ctx.moveTo(xB+30, yB);
+        ctx.lineTo(xB, yB+30);
+        ctx.stroke();
+    }
+
 });
