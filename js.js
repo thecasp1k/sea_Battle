@@ -90,6 +90,14 @@ canvas.addEventListener('click', (e) => {
         ctx.moveTo(xB+30, yB);
         ctx.lineTo(xB, yB+30);
         ctx.stroke();
+        
+        // ctx.beginPath();
+        // ctx.strokeStyle = 'Red';
+        // ctx.lineWidth = 2;
+        // ctx.arc(xB+15,yB+15,8,0,Math.PI * 2, false);
+        // ctx.fillStyle = 'red'
+        // ctx.fill();
+        // ctx.stroke();
     }
 
 });
