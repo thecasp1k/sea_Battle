@@ -75,29 +75,17 @@ let arrayShips = [4,3,3,2,2,2,1,1,1,1];
 // ctx.strokeRect(ww*0.1, wh*0.1+630, 30, 30);
 // ctx.strokeRect(ww*0.1, wh*0.1+665, 30, 30);
 
-// let testObjPositionShips = {
-//     11: {xS: 12, xE: 12, yS: 0, yE: 0, lengthShip: 1, hit: 0},
-//     12: {xS: 12, xE: 12, yS: 2, yE: 2, lengthShip: 1, hit: 0},
-//     13: {xS: 12, xE: 12, yS: 4, yE: 4, lengthShip: 1, hit: 0},
-//     14: {xS: 12, xE: 12, yS: 6, yE: 6, lengthShip: 1, hit: 0},
-//     21: {xS: 12, xE: 12, yS: 8, yE: 9, lengthShip: 2, hit: 0},
-//     22: {xS: 14, xE: 14, yS: 8, yE: 9, lengthShip: 2, hit: 0},
-//     23: {xS: 14, xE: 14, yS: 5, yE: 6, lengthShip: 2, hit: 0},
-//     31: {xS: 14, xE: 14, yS: 1, yE: 3, lengthShip: 3, hit: 0},
-//     32: {xS: 16, xE: 16, yS: 0, yE: 2, lengthShip: 3, hit: 0},
-//     41: {xS: 16, xE: 16, yS: 4, yE: 7, lengthShip: 4, hit: 0},
-// };
 let testObjPositionShips = {
-    11: {A1: 0, lengthShip: 1, hit: 0},
-    12: {A3: 0, lengthShip: 1, hit: 0},
-    13: {A5: 0, lengthShip: 1, hit: 0},
-    14: {A7: 0, lengthShip: 1, hit: 0},
-    21: {A9: 0, A10: 0, lengthShip: 2, hit: 0},
-    22: {C9: 0, C10: 0, lengthShip: 2, hit: 0},
-    23: {C6: 0, C7: 0, lengthShip: 2, hit: 0},
-    31: {C2:0, C3: 0, C4: 0, lengthShip: 3, hit: 0},
-    32: {E1: 0, E2: 0, E3: 0, lengthShip: 3, hit: 0},
-    41: {E5: 0, E6: 0, E7:0, E8: 0, lengthShip: 4, hit: 0},
+    11: {A1: 0, lengthShip: 1, hit: 0, orintation: 'v'},
+    12: {A3: 0, lengthShip: 1, hit: 0, orintation: 'v'},
+    13: {A5: 0, lengthShip: 1, hit: 0, orintation: 'v'},
+    14: {A7: 0, lengthShip: 1, hit: 0 ,orintation: 'v'},
+    21: {A9: 0, A10: 0, lengthShip: 2, hit: 0, orintation: 'v'},
+    22: {C9: 0, C10: 0, lengthShip: 2, hit: 0, orintation: 'v'},
+    23: {C6: 0, C7: 0, lengthShip: 2, hit: 0, orintation: 'v'},
+    31: {C2:0, C3: 0, C4: 0, lengthShip: 3, hit: 0, orintation: 'v'},
+    32: {E1: 0, E2: 0, E3: 0, lengthShip: 3, hit: 0, orintation: 'v'},
+    41: {E5: 0, F5: 0, G5:0, H5: 0, lengthShip: 4, hit: 0, orintation: 'h'},
 };
 
 canvas.addEventListener('click', (e) => {
@@ -108,6 +96,9 @@ canvas.addEventListener('click', (e) => {
     if(x >= 12 && x <= 21 && y >= 0 && y <= 9) {
         let objProp = arrayLetter[x-12]+(y+1);
         for(let key in testObjPositionShips) {
+            if(testObjPositionShips[key][objProp] == 1) {
+                return;
+            }
             if(testObjPositionShips[key][objProp] == 0){
                 ctx.beginPath();
                 ctx.strokeStyle = 'Red';
@@ -117,11 +108,12 @@ canvas.addEventListener('click', (e) => {
                 ctx.fill();
                 ctx.stroke();
                 testObjPositionShips[key].hit++;
+                testObjPositionShips[key][objProp] = 1;
                 if(testObjPositionShips[key].lengthShip === testObjPositionShips[key].hit) {
-                    break;
-                    /*Late add cross round ship*/
+                    crossForShips(testObjPositionShips[key]);                    
+                    return;
                 }
-                break;
+                return;
             }
         }
         ctx.beginPath();
@@ -132,22 +124,51 @@ canvas.addEventListener('click', (e) => {
         ctx.moveTo(xB+30, yB);
         ctx.lineTo(xB, yB+30);
         ctx.stroke();
-        // ctx.beginPath();
-        // ctx.strokeStyle = '#888';
-        // ctx.lineWidth = 2;
-        // ctx.moveTo(xB, yB);
-        // ctx.lineTo(xB+30, yB+30);
-        // ctx.moveTo(xB+30, yB);
-        // ctx.lineTo(xB, yB+30);
-        // ctx.stroke();
-        
-        // ctx.beginPath();
-        // ctx.strokeStyle = 'Red';
-        // ctx.lineWidth = 2;
-        // ctx.arc(xB+15,yB+15,8,0,Math.PI * 2, false);
-        // ctx.fillStyle = 'red'
-        // ctx.fill();
-        // ctx.stroke();
     }
 
 });
+
+function crossForShips (shipsObj) {
+    let massX = [];
+    let massY = [];
+    for(let key in shipsObj) {
+        let t = key.split('');
+        let x = arrayLetter.indexOf(t[0])+12;
+        let y = t[1]-1;
+        if(shipsObj.orintation == 'v'){
+            massX.push(x-1, x, x+1);
+            massY.push(y-1,y-1,y-1);
+            for( let i = 0; i < shipsObj.lengthShip; i++ ){
+                    massX.push(x-1,x+1);
+                    massY.push(y+i,y+i);
+            }
+            massX.push(x-1, x, x+1);
+            massY.push(y+shipsObj.lengthShip, y+shipsObj.lengthShip, y+shipsObj.lengthShip);
+        }
+        else if (shipsObj.orintation == 'h'){
+            massX.push(x-1,x-1,x-1);
+            massY.push(y-1,y,y+1);
+            for( let i = 0; i < shipsObj.lengthShip; i++ ){
+                massX.push(x+i,x+i);
+                massY.push(y-1,y+1);
+            }
+            massX.push(x+shipsObj.lengthShip,x+shipsObj.lengthShip,x+shipsObj.lengthShip);
+            massY.push(y-1,y,y+1);
+        }
+        break;
+    }
+    for(let i = 0; i < massY.length; i++) {
+        if(massX[i] >= 12 && massX[i] <= 21 && massY[i] >= 0 && massY[i] <= 9) {
+            let xB = ww*0.1+(massX[i]*30);
+            let yB = wh*0.1+(massY[i]*30);
+            ctx.beginPath();
+            ctx.strokeStyle = '#888';
+            ctx.lineWidth = 2;
+            ctx.moveTo(xB, yB);
+            ctx.lineTo(xB+30, yB+30);
+            ctx.moveTo(xB+30, yB);
+            ctx.lineTo(xB, yB+30);
+            ctx.stroke();
+        }
+    }
+}
